@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import pl.decerto.techflash.entities.Address;
 import pl.decerto.techflash.entities.Car;
 import pl.decerto.techflash.entities.CompanyAccount;
@@ -21,25 +20,31 @@ public class App {
 
 	public static void main(String[] args) {
 
+		User user = getUserInstance("Michal");
+
 		Session session = HibernateUtil.getSessionFactory().openSession();
+		System.out.println("BEFORE SAVING ENTITY:\n");
+		System.out.println(session.contains(user));
 
 		try {
 			session.getTransaction().begin();
-
+			session.save(user);
+			System.out.println("\nAFTER SAVING ENTITY:\n");
+			System.out.println(session.contains(user));
 			session.getTransaction().commit();
 
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			session.close();
 			HibernateUtil.getSessionFactory().close();
 		}
 	}
 
-	private static User getUserInstance(String name){
+	private static User getUserInstance(String name) {
 		User user = new User();
 		user.setBirthDate(new Date());
-		user.setCars(Lists.newArrayList(getCarInstance("hgf233"),getCarInstance("asd233")));
+		user.setCars(Lists.newArrayList(getCarInstance("hgf233"), getCarInstance("asd233")));
 		user.setCreatedDate(new Date());
 		user.setEmail("asdas@gmail.com");
 		user.setFirstName(name);
@@ -55,7 +60,7 @@ public class App {
 		return user;
 	}
 
-	private static Address getAddressInstance(String city){
+	private static Address getAddressInstance(String city) {
 		Address address = new Address();
 		address.setCity(city);
 		address.setCountry("Polska");
@@ -66,7 +71,7 @@ public class App {
 		return address;
 	}
 
-	private static Credential getCredentialInstance(User user){
+	private static Credential getCredentialInstance(User user) {
 		Credential credential = new Credential();
 		credential.setPassword("warta1a2345");
 		credential.setUsername("tomcio234");
@@ -74,7 +79,7 @@ public class App {
 		return credential;
 	}
 
-	private static List<Transaction> getTransactions(){
+	private static List<Transaction> getTransactions() {
 		Transaction transaction1 = new Transaction();
 		//transaction1.setUser(getUserInstance());
 		transaction1.setInitialBalance(BigDecimal.valueOf(2000));
@@ -90,7 +95,7 @@ public class App {
 		return Lists.newArrayList(transaction1, transaction2);
 	}
 
-	private static CompanyAccount getCompanyAccountInstance(){
+	private static CompanyAccount getCompanyAccountInstance() {
 		CompanyAccount companyAccount = new CompanyAccount();
 		companyAccount.setCompanyName("WARTA");
 		companyAccount.setNip("123123");
@@ -99,7 +104,7 @@ public class App {
 		return companyAccount;
 	}
 
-	private static Car getCarInstance(String registrationNumber){
+	private static Car getCarInstance(String registrationNumber) {
 		Car car = new Car();
 		car.setModel("Transit");
 		car.setRegistrationNumber(registrationNumber);
