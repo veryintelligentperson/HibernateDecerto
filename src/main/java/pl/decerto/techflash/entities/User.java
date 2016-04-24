@@ -13,6 +13,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -41,6 +44,11 @@ public class User {
 
 	@Column(name = "LAST_NAME")
 	private String lastName;
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "USER_CAR", joinColumns =@JoinColumn(name = "USER_ID"),
+			inverseJoinColumns = @JoinColumn(name = "CAR_ID"))
+	private List<Car> cars;
 
 	@Column(name = "BIRTH_DATE")
 	private Date birthDate;

@@ -9,6 +9,8 @@ import java.util.Map;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Session;
 import pl.decerto.techflash.entities.Address;
+import pl.decerto.techflash.entities.Car;
+import pl.decerto.techflash.entities.CompanyAccount;
 import pl.decerto.techflash.entities.Credential;
 import pl.decerto.techflash.entities.Transaction;
 import pl.decerto.techflash.entities.User;
@@ -22,9 +24,11 @@ public class App {
 		try {
 			session.getTransaction().begin();
 
-			Credential credential = getCredentialInstance(getUserInstance());
+		//	Credential credential = getCredentialInstance(getUserInstance("Michal"));
+			CompanyAccount companyAccount = getCompanyAccountInstance();
 
-			session.save(credential);
+		//	session.save(credential);
+			session.save(companyAccount);
 			session.getTransaction().commit();
 
 		}catch (Exception e){
@@ -33,12 +37,13 @@ public class App {
 		session.close();
 	}
 
-	private static User getUserInstance(){
+	private static User getUserInstance(String name){
 		User user = new User();
 		user.setBirthDate(new Date());
+		user.setCars(Lists.newArrayList(getCarInstance("hgf233"),getCarInstance("asd233")));
 		user.setCreatedDate(new Date());
 		user.setEmail("asdas@gmail.com");
-		user.setFirstName("Michal");
+		user.setFirstName(name);
 		user.setTransactions(getTransactions());
 		user.setLastName("Stepniak");
 		user.setPhoneNumber("3322123123");
@@ -84,5 +89,21 @@ public class App {
 		transaction2.setClosingBalance(transaction1.getInitialBalance().add(transaction1.getTransactionAmount()));
 
 		return Lists.newArrayList(transaction1, transaction2);
+	}
+
+	private static CompanyAccount getCompanyAccountInstance(){
+		CompanyAccount companyAccount = new CompanyAccount();
+		companyAccount.setCompanyName("WARTA");
+		companyAccount.setNip("123123");
+		companyAccount.setRegon("12333321");
+		companyAccount.setUsers(Lists.newArrayList(getUserInstance("Wojtek"), getUserInstance("Marcin")));
+		return companyAccount;
+	}
+
+	private static Car getCarInstance(String registrationNumber){
+		Car car = new Car();
+		car.setModel("Transit");
+		car.setRegistrationNumber(registrationNumber);
+		return car;
 	}
 }
