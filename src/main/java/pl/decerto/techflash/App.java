@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import pl.decerto.techflash.entities.Address;
 import pl.decerto.techflash.entities.Car;
 import pl.decerto.techflash.entities.CompanyAccount;
@@ -21,17 +20,32 @@ public class App {
 
 	public static void main(String[] args) {
 
-		Session session = HibernateUtil.getSessionFactory().openSession();
-
 		try {
+			Session session = HibernateUtil.getSessionFactory().openSession();
 			session.getTransaction().begin();
 
+			User user = (User) session.get(User.class, 1L);
+
 			session.getTransaction().commit();
+			session.close();
+
+			//second session
+
+			Session session2= HibernateUtil.getSessionFactory().openSession();
+			session2.getTransaction().begin();
+
+			System.out.println(session2.contains(user));
+			session2.update(user);
+			user.setFirstName("John");
+			System.out.println("update invoked");
+			System.out.println(session2.contains(user));
+
+			session2.getTransaction().commit();
+			session2.close();
 
 		}catch (Exception e){
 			e.printStackTrace();
 		}finally {
-			session.close();
 			HibernateUtil.getSessionFactory().close();
 		}
 	}

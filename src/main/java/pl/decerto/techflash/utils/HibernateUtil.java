@@ -21,7 +21,7 @@ public class HibernateUtil {
 			configuration.addAnnotatedClass(Transaction.class);
 			configuration.addAnnotatedClass(CompanyAccount.class);
 			configuration.addAnnotatedClass(Car.class);
-			configuration.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+			//configuration.setProperty("hibernate.hbm2ddl.auto", "create-drop");
 			return configuration.buildSessionFactory(new StandardServiceRegistryBuilder().build());
 		} catch (Exception e) {
 			e.printStackTrace();
