@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import pl.decerto.techflash.entities.Address;
 import pl.decerto.techflash.entities.Car;
 import pl.decerto.techflash.entities.CompanyAccount;
@@ -21,20 +22,18 @@ public class App {
 	public static void main(String[] args) {
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
+
 		try {
 			session.getTransaction().begin();
 
-		//	Credential credential = getCredentialInstance(getUserInstance("Michal"));
-			CompanyAccount companyAccount = getCompanyAccountInstance();
-
-		//	session.save(credential);
-			session.save(companyAccount);
 			session.getTransaction().commit();
 
 		}catch (Exception e){
 			e.printStackTrace();
+		}finally {
+			session.close();
+			HibernateUtil.getSessionFactory().close();
 		}
-		session.close();
 	}
 
 	private static User getUserInstance(String name){
