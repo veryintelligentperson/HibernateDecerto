@@ -25,7 +25,11 @@ public class App {
 
 		try {
 			session.getTransaction().begin();
-
+			System.out.println("\n\n");
+			User test = (User) session.get(User.class, 1L);
+			test = (User) session.get(User.class, 1L);
+			//User test = (User) session.load(User.class, 1L);
+			System.out.println("\n\n");
 			session.getTransaction().commit();
 
 		}catch (Exception e){
