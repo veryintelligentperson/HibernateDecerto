@@ -25,7 +25,8 @@ public class App {
 
 		try {
 			session.getTransaction().begin();
-
+			CompanyAccount companyAccount = getCompanyAccountInstance();
+			session.save(companyAccount);
 			session.getTransaction().commit();
 
 		}catch (Exception e){
@@ -42,9 +43,10 @@ public class App {
 		user.setCars(Lists.newArrayList(getCarInstance("hgf233"),getCarInstance("asd233")));
 		user.setCreatedDate(new Date());
 		user.setEmail("asdas@gmail.com");
+		user.setCredential(getCredentialInstance(user));
 		user.setFirstName(name);
-		user.setTransactions(getTransactions());
-		user.setLastName("Stepniak");
+		user.setTransactions(getTransactions(user));
+		user.setLastName("Kowalczyk");
 		user.setPhoneNumber("3322123123");
 		user.setAddresses(Lists.newArrayList(getAddressInstance("warszawa"), getAddressInstance("wroclaw")));
 		user.setValidTill(DateUtils.addMonths(new Date(), 1));
@@ -74,15 +76,15 @@ public class App {
 		return credential;
 	}
 
-	private static List<Transaction> getTransactions(){
+	private static List<Transaction> getTransactions(User user){
 		Transaction transaction1 = new Transaction();
-		//transaction1.setUser(getUserInstance());
+		transaction1.setUser(user);
 		transaction1.setInitialBalance(BigDecimal.valueOf(2000));
 		transaction1.setTransactionAmount(BigDecimal.valueOf(-300));
 		transaction1.setClosingBalance(transaction1.getInitialBalance().add(transaction1.getTransactionAmount()));
 
 		Transaction transaction2 = new Transaction();
-		//transaction2.setUser(getUserInstance());
+		transaction2.setUser(user);
 		transaction2.setInitialBalance(BigDecimal.valueOf(1000));
 		transaction2.setTransactionAmount(BigDecimal.valueOf(-300));
 		transaction2.setClosingBalance(transaction1.getInitialBalance().add(transaction1.getTransactionAmount()));

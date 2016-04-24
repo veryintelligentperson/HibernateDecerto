@@ -35,11 +35,10 @@ public class User {
 	@Column(name = "FIRST_NAME")
 	private String firstName;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	//@JoinColumn(name = "USER_ID", nullable = false)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private List<Transaction> transactions;
 
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Credential credential;
 
 	@Column(name = "LAST_NAME")

@@ -20,7 +20,7 @@ public class Credential {
 	@Column(name = "CREDENTIAL_ID")
 	private Long credentialId;
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne()
 	@JoinColumn(name = "USER_ID")
 	private User user;
 
