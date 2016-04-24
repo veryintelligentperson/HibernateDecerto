@@ -13,6 +13,7 @@ public class HibernateUtil {
 		try {
 			Configuration configuration = new Configuration();
 			configuration.addAnnotatedClass(User.class);
+			configuration.setProperty("hibernate.hbm2ddl.auto", "create-drop");
 			return configuration.buildSessionFactory(new StandardServiceRegistryBuilder().build());
 		} catch (Exception e) {
 			e.printStackTrace();
