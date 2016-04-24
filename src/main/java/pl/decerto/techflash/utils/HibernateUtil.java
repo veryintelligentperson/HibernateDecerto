@@ -3,6 +3,8 @@ package pl.decerto.techflash.utils;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import pl.decerto.techflash.entities.Credential;
+import pl.decerto.techflash.entities.Transaction;
 import pl.decerto.techflash.entities.User;
 
 public class HibernateUtil {
@@ -13,6 +15,8 @@ public class HibernateUtil {
 		try {
 			Configuration configuration = new Configuration();
 			configuration.addAnnotatedClass(User.class);
+			configuration.addAnnotatedClass(Credential.class);
+			configuration.addAnnotatedClass(Transaction.class);
 			configuration.setProperty("hibernate.hbm2ddl.auto", "create-drop");
 			return configuration.buildSessionFactory(new StandardServiceRegistryBuilder().build());
 		} catch (Exception e) {

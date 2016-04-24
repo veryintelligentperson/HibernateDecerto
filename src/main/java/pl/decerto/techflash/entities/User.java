@@ -1,23 +1,23 @@
 package pl.decerto.techflash.entities;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.Formula;
 
 @Data
 @Entity
@@ -31,6 +31,13 @@ public class User {
 
 	@Column(name = "FIRST_NAME")
 	private String firstName;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	//@JoinColumn(name = "USER_ID", nullable = false)
+	private List<Transaction> transactions;
+
+	@OneToOne(mappedBy = "user")
+	private Credential credential;
 
 	@Column(name = "LAST_NAME")
 	private String lastName;

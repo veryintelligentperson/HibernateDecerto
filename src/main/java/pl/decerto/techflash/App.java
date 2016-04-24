@@ -2,11 +2,15 @@ package pl.decerto.techflash;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Session;
 import pl.decerto.techflash.entities.Address;
+import pl.decerto.techflash.entities.Credential;
+import pl.decerto.techflash.entities.Transaction;
 import pl.decerto.techflash.entities.User;
 import pl.decerto.techflash.utils.HibernateUtil;
 
@@ -18,18 +22,11 @@ public class App {
 		try {
 			session.getTransaction().begin();
 
-			User user = getUserInstance();
-			session.save(user);
+			Credential credential = getCredentialInstance(getUserInstance());
+
+			session.save(credential);
 			session.getTransaction().commit();
 
-			session.beginTransaction();
-
-			User dbUser = (User) session.get(User.class, user.getUserId());
-			dbUser.setFirstName("somethingDifferent");
-			dbUser.setCreatedDate(DateUtils.addDays(new Date(), 1));
-
-			session.update(dbUser);
-			session.getTransaction().commit();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -42,6 +39,7 @@ public class App {
 		user.setCreatedDate(new Date());
 		user.setEmail("asdas@gmail.com");
 		user.setFirstName("Michal");
+		user.setTransactions(getTransactions());
 		user.setLastName("Stepniak");
 		user.setPhoneNumber("3322123123");
 		user.setAddresses(Lists.newArrayList(getAddressInstance("warszawa"), getAddressInstance("wroclaw")));
@@ -62,5 +60,29 @@ public class App {
 		address.setHouseNumber("32");
 		address.setZipCode("94-333");
 		return address;
+	}
+
+	private static Credential getCredentialInstance(User user){
+		Credential credential = new Credential();
+		credential.setPassword("warta1a2345");
+		credential.setUsername("tomcio234");
+		credential.setUser(user);
+		return credential;
+	}
+
+	private static List<Transaction> getTransactions(){
+		Transaction transaction1 = new Transaction();
+		//transaction1.setUser(getUserInstance());
+		transaction1.setInitialBalance(BigDecimal.valueOf(2000));
+		transaction1.setTransactionAmount(BigDecimal.valueOf(-300));
+		transaction1.setClosingBalance(transaction1.getInitialBalance().add(transaction1.getTransactionAmount()));
+
+		Transaction transaction2 = new Transaction();
+		//transaction2.setUser(getUserInstance());
+		transaction2.setInitialBalance(BigDecimal.valueOf(1000));
+		transaction2.setTransactionAmount(BigDecimal.valueOf(-300));
+		transaction2.setClosingBalance(transaction1.getInitialBalance().add(transaction1.getTransactionAmount()));
+
+		return Lists.newArrayList(transaction1, transaction2);
 	}
 }
