@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import pl.decerto.techflash.entities.Address;
 import pl.decerto.techflash.entities.Car;
 import pl.decerto.techflash.entities.CompanyAccount;
@@ -25,6 +24,11 @@ public class App {
 
 		try {
 			session.getTransaction().begin();
+			User user = (User) session.get(User.class, 1L);
+			System.out.println(session.contains(user));
+			session.delete(user);
+			System.out.println("delete invoked");
+			System.out.println(session.contains(user));
 
 			session.getTransaction().commit();
 
