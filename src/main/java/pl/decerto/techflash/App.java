@@ -7,8 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.time.DateUtils;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import pl.decerto.techflash.entities.Address;
 import pl.decerto.techflash.entities.Car;
 import pl.decerto.techflash.entities.CompanyAccount;
@@ -28,15 +30,12 @@ public class App {
 		try {
 			tx.begin();
 
-			Query query = session.createQuery("select t from Transaction t where t.transactionType='gasoline'");
+			Criteria criteria = session.createCriteria(User.class);
+			criteria.addOrder(Order.asc("firstName")); //we can chain criterias
+			List<User> users = criteria.list();
 
-			//TypedQuery<Transaction> query = em.createQuery("from Transaction t order by t.title", Transaction.class);
-			//query.getResultList()
-			List<Transaction> transactions = query.list();
-
-			for (Transaction t : transactions) {
-				System.out.println(t.getTransactionAmount());
-				System.out.println(t.getTransactionType());
+			for (User user : users){
+				System.out.println(user.getFirstName());
 			}
 
 			tx.commit();
