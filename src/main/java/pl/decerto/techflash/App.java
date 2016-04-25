@@ -32,7 +32,10 @@ public class App {
 		EntityManager em = null;
 		EntityTransaction tx = null;
 
-		try{
+		int pageNumber = 1;
+		int pageSize = 4;
+
+		try {
 			emf = Persistence.createEntityManagerFactory("gas-station");
 			em = emf.createEntityManager();
 			tx = em.getTransaction();
@@ -42,19 +45,17 @@ public class App {
 			CriteriaQuery<Transaction> criteriaQuery = cb.createQuery(Transaction.class);
 			Root<Transaction> root = criteriaQuery.from(Transaction.class); //to access properties
 
-			Path<BigDecimal> initialBalancePath = root.get("initialBalance");
-
-			criteriaQuery.select(root).where(cb.and(cb.le(initialBalancePath, new BigDecimal(2400)), cb.ge(initialBalancePath, new BigDecimal(300))));
-
-
 			TypedQuery<Transaction> query = em.createQuery(criteriaQuery);
+			query.setFirstResult((pageNumber - 1) * pageSize);
+			query.setMaxResults(pageSize);
+
 			List<Transaction> users = query.getResultList();
 			users.forEach(k -> System.out.println(k.getInitialBalance()));
 
 			tx.commit();
-		}catch(Exception e){
+		} catch (Exception e) {
 			tx.rollback();
-		}finally{
+		} finally {
 			em.close();
 			emf.close();
 		}
