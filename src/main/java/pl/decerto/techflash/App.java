@@ -6,51 +6,36 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import org.apache.commons.lang.time.DateUtils;
+import org.hibernate.Session;
 import pl.decerto.techflash.entities.Address;
 import pl.decerto.techflash.entities.Car;
 import pl.decerto.techflash.entities.CompanyAccount;
 import pl.decerto.techflash.entities.Credential;
 import pl.decerto.techflash.entities.Transaction;
 import pl.decerto.techflash.entities.User;
+import pl.decerto.techflash.entities.UserId;
+import pl.decerto.techflash.utils.HibernateUtil;
 
 public class App {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 
-		EntityManagerFactory emf = null;
-		EntityManager em = null;
-		EntityTransaction tx = null;
+		Session session = HibernateUtil.getSessionFactory().openSession();
 
-		try{
-			emf = Persistence.createEntityManagerFactory("gas-station");
-			em = emf.createEntityManager();
-			tx = em.getTransaction();
-			tx.begin();
+		try {
+			session.getTransaction().begin();
+			//session.save(getUserInstance("Michal"));
+			User user = (User) session.get(User.class, new UserId("Michal", "Kowalczyk"));
+			System.out.println(user.getEmail());
+			session.getTransaction().commit();
 
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-			Root<User> root = criteriaQuery.from(User.class); //to access properties
-			criteriaQuery.select(root);
-			TypedQuery<User> query = em.createQuery(criteriaQuery);
-			List<User> users = query.getResultList();
-			users.forEach(k -> System.out.println(k.getFirstName()));
-
-			tx.commit();
-		}catch(Exception e){
-			tx.rollback();
-		}finally{
-			em.close();
-			emf.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+			HibernateUtil.getSessionFactory().close();
 		}
 	}
 

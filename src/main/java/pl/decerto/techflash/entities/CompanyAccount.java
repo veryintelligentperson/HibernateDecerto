@@ -27,7 +27,7 @@ public class CompanyAccount {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "COMPANY_USERS", joinColumns =@JoinColumn(name = "COMPANY_ID"),
-	inverseJoinColumns = @JoinColumn(name = "USER_ID"))
+	inverseJoinColumns = {@JoinColumn(name = "LAST_NAME"), @JoinColumn(name = "FIRST_NAME")})
 	private List<User> users;
 
 	@Column(name = "NIP")

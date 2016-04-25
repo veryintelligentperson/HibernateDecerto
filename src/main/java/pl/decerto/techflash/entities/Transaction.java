@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.criteria.Join;
@@ -27,7 +28,7 @@ public class Transaction {
 	private String transactionType;
 
 	@ManyToOne()
-	@JoinColumn(name = "USER_ID", nullable = false)
+	@JoinColumns({@JoinColumn(name = "FIRST_NAME"), @JoinColumn(name = "LAST_NAME")})
 	private User user;
 
 	@Column(name = "INITIAL_BALANCE")

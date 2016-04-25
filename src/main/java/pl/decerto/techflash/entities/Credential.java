@@ -1,11 +1,11 @@
 package pl.decerto.techflash.entities;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class Credential {
 	private Long credentialId;
 
 	@OneToOne()
-	@JoinColumn(name = "USER_ID")
+	@JoinColumns({@JoinColumn(name = "FIRST_NAME"), @JoinColumn(name = "LAST_NAME")})
 	private User user;
 
 	private String username;

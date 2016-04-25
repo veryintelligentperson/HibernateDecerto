@@ -12,6 +12,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -25,15 +26,20 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="COMPANY_USER")
+@IdClass(UserId.class)
 public class User {
 
-	@Id
-	@GeneratedValue
-	@Column(name = "USER_ID")
-	private Long userId;
+//	@Id
+//	@Column(name = "USER_ID")
+//	private Long userId;
 
+	@Id
 	@Column(name = "FIRST_NAME")
 	private String firstName;
+
+	@Id
+	@Column(name = "LAST_NAME")
+	private String lastName;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private List<Transaction> transactions;
@@ -41,11 +47,8 @@ public class User {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Credential credential;
 
-	@Column(name = "LAST_NAME")
-	private String lastName;
-
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "USER_CAR", joinColumns =@JoinColumn(name = "USER_ID"),
+	@JoinTable(name = "USER_CAR", joinColumns ={@JoinColumn(name = "LAST_NAME"), @JoinColumn(name = "FIRST_NAME")},
 			inverseJoinColumns = @JoinColumn(name = "CAR_ID"))
 	private List<Car> cars;
 
@@ -64,7 +67,7 @@ public class User {
 //	private List<String> registrationNumbers;
 
 	@ElementCollection
-	@CollectionTable(name = "REGISTRATION_NUMBER", joinColumns = @JoinColumn(name ="USER_ID"))
+	@CollectionTable(name = "REGISTRATION_NUMBER", joinColumns = {@JoinColumn(name = "LAST_NAME"), @JoinColumn(name = "FIRST_NAME")})
 	@MapKeyColumn(name = "KEY")
 	@Column(name = "NUMBER")
 	private Map<String, String> registrationNumbers;
@@ -76,7 +79,7 @@ public class User {
 	private Date validTill;
 
 	@ElementCollection
-	@CollectionTable(name = "USER_ADDRESS", joinColumns =@JoinColumn(name = "USER_ID"))
+	@CollectionTable(name = "USER_ADDRESS", joinColumns ={@JoinColumn(name = "LAST_NAME"), @JoinColumn(name = "FIRST_NAME")})
 	@AttributeOverrides({@AttributeOverride(name = "country",column=@Column(name = "HOMELAND"))})
 	private List<Address> addresses;
 
