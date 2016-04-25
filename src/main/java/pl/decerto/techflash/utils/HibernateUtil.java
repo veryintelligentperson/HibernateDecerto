@@ -3,14 +3,10 @@ package pl.decerto.techflash.utils;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import pl.decerto.techflash.entities.Car;
-import pl.decerto.techflash.entities.CompanyAccount;
 import pl.decerto.techflash.entities.Credential;
 import pl.decerto.techflash.entities.HotelAccount;
 import pl.decerto.techflash.entities.Reservation;
 import pl.decerto.techflash.entities.Room;
-import pl.decerto.techflash.entities.Transaction;
-import pl.decerto.techflash.entities.User;
 
 public class HibernateUtil {
 
