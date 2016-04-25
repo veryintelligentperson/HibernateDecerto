@@ -29,12 +29,16 @@ public class App {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		org.hibernate.Transaction tx = session.getTransaction();
 
+		int pageNumber = 1;
+		int pageSize = 4;
+
 		try {
 			tx.begin();
 
-			Criterion criterion1 = Restrictions.le("initialBalance", new BigDecimal(2400));
-			List<Transaction> transactions = session.createCriteria(Transaction.class).add(criterion1)
-					.addOrder(Order.asc("initialBalance")).list();
+			Criteria criteria = session.createCriteria(Transaction.class).addOrder(Order.asc("initialBalance"));
+			criteria.setFirstResult((pageNumber-1)*pageSize);
+			criteria.setMaxResults(pageSize);
+			List<Transaction> transactions = criteria.list();
 
 			transactions.forEach(k -> System.out.println(k.getInitialBalance()));
 
