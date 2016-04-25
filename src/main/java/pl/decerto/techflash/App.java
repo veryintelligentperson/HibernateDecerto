@@ -1,20 +1,17 @@
 package pl.decerto.techflash;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import pl.decerto.techflash.entities.Address;
-import pl.decerto.techflash.entities.Car;
-import pl.decerto.techflash.entities.CompanyAccount;
 import pl.decerto.techflash.entities.Credential;
-import pl.decerto.techflash.entities.Transaction;
-import pl.decerto.techflash.entities.User;
+import pl.decerto.techflash.entities.HotelAccount;
+import pl.decerto.techflash.entities.Reservation;
+import pl.decerto.techflash.entities.Room;
 import pl.decerto.techflash.utils.HibernateUtil;
 
 public class App {
@@ -25,39 +22,44 @@ public class App {
 
 		try {
 			session.getTransaction().begin();
-			CompanyAccount companyAccount = getCompanyAccountInstance();
-			session.save(companyAccount);
+			session.save(getAccount("Michal", "Kowalski", "Warszawa"));
+			session.save(getAccount("Wojciech", "Nowak", "Gdansk"));
 			session.getTransaction().commit();
 
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			session.close();
 			HibernateUtil.getSessionFactory().close();
 		}
 	}
 
-	private static User getUserInstance(String name){
-		User user = new User();
-		user.setBirthDate(new Date());
-		user.setCars(Lists.newArrayList(getCarInstance("hgf233"),getCarInstance("asd233")));
-		user.setCreatedDate(new Date());
-		user.setEmail("asdas@gmail.com");
-		user.setCredential(getCredentialInstance(user));
-		user.setFirstName(name);
-		user.setTransactions(getTransactions(user));
-		user.setLastName("Kowalczyk");
-		user.setPhoneNumber("3322123123");
-		user.setAddresses(Lists.newArrayList(getAddressInstance("warszawa"), getAddressInstance("wroclaw")));
-		user.setValidTill(DateUtils.addMonths(new Date(), 1));
-		Map<String, String> map = Maps.newHashMap();
-		map.put("someKey", "ONY123");
-		map.put("someKey2", "OKU233");
-		user.setRegistrationNumbers(map);
-		return user;
+	private static HotelAccount getAccount(String name, String lastName, String city) {
+		HotelAccount hotelAccount = new HotelAccount();
+		hotelAccount.setReservations(getReservationsList(hotelAccount));
+		hotelAccount.setAddress(getAddressInstance(city));
+		hotelAccount.setCredential(getCredentialInstance(hotelAccount));
+		hotelAccount.setFirstName(name);
+		hotelAccount.setLastName(lastName);
+		return hotelAccount;
 	}
 
-	private static Address getAddressInstance(String city){
+	private static Room getRoomInstance(HotelAccount hotelAccount) {
+		Room room = new Room();
+		room.setPrice(BigDecimal.valueOf(Math.random() * 1000));
+		room.setReservations(getReservationsList(hotelAccount));
+		room.setRoomSize(3);
+	}
+
+	private static List<Reservation> getReservationsList(HotelAccount hotelAccount) {
+		Reservation reservation = new Reservation();
+		reservation.setAccount(hotelAccount);
+		reservation.setFrom(new Date());
+		reservation.setTo(DateUtils.addDays(new Date(), 7));
+		reservation.setRooms(Lists.newArrayList(getRoomInstance(hotelAccount), getRoomInstance(hotelAccount)));
+	}
+
+	private static Address getAddressInstance(String city) {
 		Address address = new Address();
 		address.setCity(city);
 		address.setCountry("Polska");
@@ -68,43 +70,11 @@ public class App {
 		return address;
 	}
 
-	private static Credential getCredentialInstance(User user){
+	private static Credential getCredentialInstance(HotelAccount hotelAccount) {
 		Credential credential = new Credential();
-		credential.setPassword("warta1a2345");
-		credential.setUsername("tomcio234");
-		credential.setUser(user);
+		credential.setPassword(RandomStringUtils.random(8));
+		credential.setUsername(hotelAccount.getFirstName() + hotelAccount.getLastName());
+		credential.setAccount(hotelAccount);
 		return credential;
-	}
-
-	private static List<Transaction> getTransactions(User user){
-		Transaction transaction1 = new Transaction();
-		transaction1.setUser(user);
-		transaction1.setInitialBalance(BigDecimal.valueOf(2000));
-		transaction1.setTransactionAmount(BigDecimal.valueOf(-300));
-		transaction1.setClosingBalance(transaction1.getInitialBalance().add(transaction1.getTransactionAmount()));
-
-		Transaction transaction2 = new Transaction();
-		transaction2.setUser(user);
-		transaction2.setInitialBalance(BigDecimal.valueOf(1000));
-		transaction2.setTransactionAmount(BigDecimal.valueOf(-300));
-		transaction2.setClosingBalance(transaction1.getInitialBalance().add(transaction1.getTransactionAmount()));
-
-		return Lists.newArrayList(transaction1, transaction2);
-	}
-
-	private static CompanyAccount getCompanyAccountInstance(){
-		CompanyAccount companyAccount = new CompanyAccount();
-		companyAccount.setCompanyName("WARTA");
-		companyAccount.setNip("123123");
-		companyAccount.setRegon("12333321");
-		companyAccount.setUsers(Lists.newArrayList(getUserInstance("Wojtek"), getUserInstance("Marcin")));
-		return companyAccount;
-	}
-
-	private static Car getCarInstance(String registrationNumber){
-		Car car = new Car();
-		car.setModel("Transit");
-		car.setRegistrationNumber(registrationNumber);
-		return car;
 	}
 }
