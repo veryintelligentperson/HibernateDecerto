@@ -40,4 +40,7 @@
 
 
 ##SQL's:
-https://gist.github.com/veryintelligentperson/4a6bc20495826e633c5d55555334db4d
+### persistence lifecycle
+[first sql](https://gist.github.com/veryintelligentperson/4a6bc20495826e633c5d55555334db4d)
+### queries
+[second sql](https://gist.github.com/veryintelligentperson/712be869142d1bf908a2efcd16ee447d)
