@@ -33,10 +33,13 @@ public class App {
 			//TypedQuery<Transaction> query = em.createQuery("from Transaction t order by t.title", Transaction.class);
 			//query.getResultList()
 			List<User> users = query.list();
-
+			System.out.println("BEFORE");
 			for (User user : users) {
 				System.out.println(user.getFirstName());
+				System.out.println(user.getCredential().getPassword());
 			}
+
+			System.out.println("AFTER");
 
 			tx.commit();
 
