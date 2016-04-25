@@ -15,6 +15,7 @@ import pl.decerto.techflash.entities.Credential;
 import pl.decerto.techflash.entities.Transaction;
 import pl.decerto.techflash.entities.User;
 import pl.decerto.techflash.entities.UserId;
+import pl.decerto.techflash.utils.CompanyType;
 import pl.decerto.techflash.utils.HibernateUtil;
 
 public class App {
@@ -114,6 +115,7 @@ public class App {
 		CompanyAccount companyAccount = new CompanyAccount();
 		companyAccount.setCompanyName("WARTA");
 		companyAccount.setNip("123123");
+		companyAccount.setCompanyType(CompanyType.CORPORATE);
 		companyAccount.setRegon("12333321");
 		companyAccount.setUsers(Lists.newArrayList(getUserInstance("Wojtek"), getUserInstance("Marcin")));
 		return companyAccount;
