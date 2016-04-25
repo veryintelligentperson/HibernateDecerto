@@ -13,6 +13,7 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import org.apache.commons.lang.time.DateUtils;
 import pl.decerto.techflash.entities.Address;
@@ -37,13 +38,18 @@ public class App {
 			tx = em.getTransaction();
 			tx.begin();
 
-			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-			CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-			Root<User> root = criteriaQuery.from(User.class); //to access properties
-			criteriaQuery.select(root);
-			TypedQuery<User> query = em.createQuery(criteriaQuery);
-			List<User> users = query.getResultList();
-			users.forEach(k -> System.out.println(k.getFirstName()));
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery<Transaction> criteriaQuery = cb.createQuery(Transaction.class);
+			Root<Transaction> root = criteriaQuery.from(Transaction.class); //to access properties
+
+			Path<BigDecimal> initialBalancePath = root.get("initialBalance");
+
+			criteriaQuery.select(root).where(cb.and(cb.le(initialBalancePath, new BigDecimal(2400)), cb.ge(initialBalancePath, new BigDecimal(300))));
+
+
+			TypedQuery<Transaction> query = em.createQuery(criteriaQuery);
+			List<Transaction> users = query.getResultList();
+			users.forEach(k -> System.out.println(k.getInitialBalance()));
 
 			tx.commit();
 		}catch(Exception e){
