@@ -10,7 +10,9 @@ import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import pl.decerto.techflash.entities.Address;
 import pl.decerto.techflash.entities.Car;
 import pl.decerto.techflash.entities.CompanyAccount;
@@ -30,13 +32,11 @@ public class App {
 		try {
 			tx.begin();
 
-			Criteria criteria = session.createCriteria(User.class);
-			criteria.addOrder(Order.asc("firstName")); //we can chain criterias
-			List<User> users = criteria.list();
+			Criterion criterion1 = Restrictions.le("initialBalance", new BigDecimal(2400));
+			List<Transaction> transactions = session.createCriteria(Transaction.class).add(criterion1)
+					.addOrder(Order.asc("initialBalance")).list();
 
-			for (User user : users){
-				System.out.println(user.getFirstName());
-			}
+			transactions.forEach(k -> System.out.println(k.getInitialBalance()));
 
 			tx.commit();
 
