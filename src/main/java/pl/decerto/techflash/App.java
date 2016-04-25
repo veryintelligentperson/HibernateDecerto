@@ -28,10 +28,11 @@ public class App {
 		try {
 			tx.begin();
 
-			Query query = session.createQuery("select t from Transaction t where t.transactionType='gasoline'");
-
-			//TypedQuery<Transaction> query = em.createQuery("from Transaction t order by t.title", Transaction.class);
-			//query.getResultList()
+			Query query = session.createQuery("select t from Transaction t where t.transactionType= ? and" +
+					" t.transactionAmount > :amount");
+			query.setParameter(0, "gasoline");
+			query.setParameter("amount", new BigDecimal(-40));
+			
 			List<Transaction> transactions = query.list();
 
 			for (Transaction t : transactions) {
