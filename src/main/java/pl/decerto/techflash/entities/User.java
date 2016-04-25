@@ -17,6 +17,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -25,6 +27,9 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="COMPANY_USER")
+@NamedQueries({
+		@NamedQuery(name = "User.withWeirdName", query = "select t from User t where t.firstName='Marcin'")
+})
 public class User {
 
 	@Id

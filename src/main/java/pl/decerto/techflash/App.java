@@ -28,15 +28,14 @@ public class App {
 		try {
 			tx.begin();
 
-			Query query = session.createQuery("select t from Transaction t where t.transactionType='gasoline'");
+			Query query = session.getNamedQuery("User.withWeirdName");
 
 			//TypedQuery<Transaction> query = em.createQuery("from Transaction t order by t.title", Transaction.class);
 			//query.getResultList()
-			List<Transaction> transactions = query.list();
+			List<User> users = query.list();
 
-			for (Transaction t : transactions) {
-				System.out.println(t.getTransactionAmount());
-				System.out.println(t.getTransactionType());
+			for (User user : users) {
+				System.out.println(user.getFirstName());
 			}
 
 			tx.commit();
