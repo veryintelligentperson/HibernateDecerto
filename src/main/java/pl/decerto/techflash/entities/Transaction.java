@@ -23,6 +23,9 @@ public class Transaction {
 	@Column(name = "TRANSACTION_ID")
 	private Long transactionId;
 
+	@Column(name = "TRANSACTION_TYPE")
+	private String transactionType;
+
 	@ManyToOne()
 	@JoinColumn(name = "USER_ID", nullable = false)
 	private User user;
