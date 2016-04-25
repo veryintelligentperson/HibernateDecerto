@@ -10,16 +10,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.apache.commons.lang.time.DateUtils;
-import org.hibernate.Query;
-import org.hibernate.Session;
 import pl.decerto.techflash.entities.Address;
 import pl.decerto.techflash.entities.Car;
 import pl.decerto.techflash.entities.CompanyAccount;
 import pl.decerto.techflash.entities.Credential;
 import pl.decerto.techflash.entities.Transaction;
 import pl.decerto.techflash.entities.User;
-import pl.decerto.techflash.utils.HibernateUtil;
 
 public class App {
 
@@ -36,8 +37,13 @@ public class App {
 			tx = em.getTransaction();
 			tx.begin();
 
-			User user = em.find(User.class, 2L);
-			System.out.println(user.getFirstName());
+			CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+			CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+			Root<User> root = criteriaQuery.from(User.class); //to access properties
+			criteriaQuery.select(root);
+			TypedQuery<User> query = em.createQuery(criteriaQuery);
+			List<User> users = query.getResultList();
+			users.forEach(k -> System.out.println(k.getFirstName()));
 
 			tx.commit();
 		}catch(Exception e){
