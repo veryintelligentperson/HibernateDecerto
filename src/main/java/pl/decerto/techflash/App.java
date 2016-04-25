@@ -6,6 +6,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -22,31 +26,25 @@ public class App {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		org.hibernate.Transaction tx = session.getTransaction();
+		EntityManagerFactory emf = null;
+		EntityManager em = null;
+		EntityTransaction tx = null;
 
-		try {
+		try{
+			emf = Persistence.createEntityManagerFactory("gas-station");
+			em = emf.createEntityManager();
+			tx = em.getTransaction();
 			tx.begin();
 
-			Query query = session.createQuery("select t from Transaction t where t.transactionType='gasoline'");
-
-			//TypedQuery<Transaction> query = em.createQuery("from Transaction t order by t.title", Transaction.class);
-			//query.getResultList()
-			List<Transaction> transactions = query.list();
-
-			for (Transaction t : transactions) {
-				System.out.println(t.getTransactionAmount());
-				System.out.println(t.getTransactionType());
-			}
+			User user = em.find(User.class, 2L);
+			System.out.println(user.getFirstName());
 
 			tx.commit();
-
-		} catch (Exception e) {
+		}catch(Exception e){
 			tx.rollback();
-			e.printStackTrace();
-		} finally {
-			session.close();
-			HibernateUtil.getSessionFactory().close();
+		}finally{
+			em.close();
+			emf.close();
 		}
 	}
 
